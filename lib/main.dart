@@ -1,7 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:udemy_coupons/helper/routes.dart';
+import 'package:udemy_coupons/models/model_udemy.dart';
 
-void main() {
+import 'models/model_users/model_user.dart';
+
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  Hive.registerAdapter(UsersAdapter());
+  Hive.openBox<Users>("users");
+
+  // Hive.openBox<ModelUdemy>("courses");
+
   runApp(const MyApp());
 }
 

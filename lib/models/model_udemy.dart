@@ -1,12 +1,26 @@
+import 'package:hive/hive.dart';
+
+part 'model_udemy.g.dart';
+
+@HiveType(typeId: 0)
 class ModelUdemy {
+  @HiveField(0)
   String? url;
+  @HiveField(1)
   String? title;
+  @HiveField(2)
   String? description;
+  @HiveField(3)
   List<String>? category;
+  @HiveField(4)
   String? thumbnail;
+  @HiveField(5)
   String? whatYouWillLearn;
+  @HiveField(6)
   String? originalPrice;
+  @HiveField(7)
   String? couponCode;
+  @HiveField(8)
   String? lastUpdated;
 
   ModelUdemy(

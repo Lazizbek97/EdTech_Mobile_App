@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:udemy_coupons/data/data.dart';
+import 'package:udemy_coupons/models/model_users/model_user.dart';
+import 'package:udemy_coupons/widgets/hive_boxes.dart';
 
 import '../../size_config.dart';
 
@@ -13,14 +15,18 @@ class EditPage extends StatefulWidget {
 
 class _EditPageState extends State<EditPage> {
   String? context1;
+
+  late Users curUser;
   @override
   void initState() {
+    curUser = UserBox.getUser().values.toList().last;
+
     if (widget.text == "name") {
-      context1 = widget.aUser.name;
+      context1 = curUser.name;
     } else if (widget.text == "email") {
-      context1 = widget.aUser.email;
+      context1 = curUser.email;
     } else {
-      context1 = widget.aUser.password;
+      context1 = curUser.password;
     }
   }
 
@@ -48,19 +54,15 @@ class _EditPageState extends State<EditPage> {
           actions: [
             IconButton(
               onPressed: () {
-                users.forEach(
-                  (element) {
-                    if (element == widget.aUser) {
-                      if (widget.text == "name") {
-                        element.name = _controllerText.text;
-                      } else if (widget.text == "email") {
-                        element.email = _controllerText.text;
-                      } else {
-                        element.password = _controllerText.text;
-                      }
-                    }
-                  },
-                );
+                if (widget.text == "name") {
+                  curUser.name = _controllerText.text;
+                } else if (widget.text == "email") {
+                  curUser.email = _controllerText.text;
+                } else {
+                  curUser.password = _controllerText.text;
+                }
+                curUser.save();
+
                 setState(() {});
                 Navigator.pushReplacementNamed(context, "/home");
               },

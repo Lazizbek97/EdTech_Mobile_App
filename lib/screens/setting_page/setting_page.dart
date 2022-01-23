@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:udemy_coupons/data/data.dart';
+import 'package:udemy_coupons/models/model_users/model_user.dart';
+import 'package:udemy_coupons/widgets/hive_boxes.dart';
 
 import '../../size_config.dart';
 
@@ -16,9 +18,12 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
   bool _switchValue = false;
+  late Users curUser;
+
   @override
   void initState() {
     setState(() {});
+    curUser = UserBox.getUser().values.toList().last;
   }
 
   @override
@@ -113,7 +118,7 @@ class _SettingPageState extends State<SettingPage> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  subtitle: Text(widget.aUser.name),
+                  subtitle: Text(curUser.name),
                   trailing: const Icon(Icons.arrow_forward_ios),
                 ),
                 decoration: BoxDecoration(
@@ -143,7 +148,7 @@ class _SettingPageState extends State<SettingPage> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  subtitle: Text(widget.aUser.email),
+                  subtitle: Text(curUser.email),
                   trailing: const Icon(Icons.arrow_forward_ios),
                 ),
                 decoration: BoxDecoration(

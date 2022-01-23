@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hive/hive.dart';
 import 'package:udemy_coupons/data/data.dart';
+import 'package:udemy_coupons/models/model_users/model_user.dart';
 import 'package:udemy_coupons/size_config.dart';
+import 'package:udemy_coupons/widgets/hive_boxes.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -11,6 +14,11 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  // @override
+  // void dispose() {
+  //   Hive.close();
+  // }
+
   bool isVisual = false;
   TextEditingController _nameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
@@ -119,6 +127,12 @@ class _SignUpPageState extends State<SignUpPage> {
                                 email: _emailController.text,
                                 password: _passwordController.text);
                             users.add(aUser);
+
+                            addUser(_nameController.text, _emailController.text,
+                                _passwordController.text);
+
+                            print(UserBox.getUser().values.toList()[0].name);
+
                             Navigator.pushReplacementNamed(context, "/home",
                                 arguments: aUser);
                           }
@@ -176,5 +190,15 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       ),
     );
+  }
+
+  Future addUser(String name, String email, String password) async {
+    final user = Users()
+      ..name = name
+      ..email = email
+      ..password = password;
+
+    final box = UserBox.getUser();
+    box.add(user);
   }
 }

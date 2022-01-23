@@ -1,26 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:udemy_coupons/data/data.dart';
 import 'package:udemy_coupons/models/model_udemy.dart';
+import 'package:udemy_coupons/models/model_users/model_user.dart';
 import 'package:udemy_coupons/screens/home_page/widgets/course.dart';
 import 'package:udemy_coupons/services/serviceUdemy.dart';
+import 'package:udemy_coupons/widgets/hive_boxes.dart';
 
 import '../../size_config.dart';
 import 'widgets/category.dart';
 
-class HomePageOne extends StatelessWidget {
+class HomePageOne extends StatefulWidget {
   static List<ModelUdemy>? datam;
-  User aUser = users.last;
 
   HomePageOne({
     Key? key,
   }) : super(key: key);
 
   @override
-  void initState() {
-    ServiceUdemy.fetchData().then((value) => datam = value);
-  }
+  State<HomePageOne> createState() => _HomePageOneState();
+}
+
+class _HomePageOneState extends State<HomePageOne> {
+  User aUser = users.last;
+  late Users curUser;
 
   @override
+  void initState() {
+    setState(() {});
+    curUser = UserBox.getUser().values.toList().last;
+  }
+
   Widget build(BuildContext context) {
     return Column(
       children: [
@@ -40,15 +50,15 @@ class HomePageOne extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Text(
+                        const Text(
                           "Hello",
                           style: TextStyle(
                             color: Colors.black,
                           ),
                         ),
                         Text(
-                          aUser.name,
-                          style: TextStyle(
+                          curUser.name,
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 32,
                           ),
@@ -85,7 +95,7 @@ class HomePageOne extends StatelessWidget {
                     InkWell(
                       onTap: () {
                         Navigator.pushNamed(context, "/search",
-                            arguments: datam);
+                            arguments: HomePageOne.datam);
                       },
                       child: TextFormField(
                         enabled: false,
