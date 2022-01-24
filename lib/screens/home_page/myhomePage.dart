@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:udemy_coupons/data/data.dart';
 import 'package:udemy_coupons/screens/profile_page/profile_page.dart';
 import 'package:udemy_coupons/screens/setting_page/setting_page.dart';
 import 'package:udemy_coupons/size_config.dart';
@@ -7,9 +6,8 @@ import 'package:udemy_coupons/size_config.dart';
 import 'home_page_one.dart';
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({
-    Key? key,
-  }) : super(key: key);
+  int userId;
+  MyHomePage({Key? key, required this.userId}) : super(key: key);
   static int curIndex = 0;
 
   @override
@@ -18,7 +16,15 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   // ignore: prefer_final_fields
-  late List _pages = [HomePageOne(), const ProfilePage(), SettingPage()];
+  late List _pages = [
+    HomePageOne(
+      userId: widget.userId,
+    ),
+    const ProfilePage(),
+    SettingPage(
+      userId: widget.userId,
+    )
+  ];
 
   @override
   Widget build(BuildContext context) {

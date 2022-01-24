@@ -6,9 +6,14 @@ import 'package:udemy_coupons/widgets/hive_boxes.dart';
 import '../../size_config.dart';
 
 class EditPage extends StatefulWidget {
-  EditPage({Key? key, required this.text}) : super(key: key);
-  User aUser = users.last;
+  EditPage({
+    Key? key,
+    required this.text,
+    required this.userId,
+  }) : super(key: key);
+  // User aUser = users.last;
   String text;
+  int userId;
   @override
   _EditPageState createState() => _EditPageState();
 }
@@ -19,7 +24,7 @@ class _EditPageState extends State<EditPage> {
   late Users curUser;
   @override
   void initState() {
-    curUser = UserBox.getUser().values.toList().last;
+    curUser = UserBox.getUser().values.toList()[widget.userId];
 
     if (widget.text == "name") {
       context1 = curUser.name;
@@ -64,7 +69,8 @@ class _EditPageState extends State<EditPage> {
                 curUser.save();
 
                 setState(() {});
-                Navigator.pushReplacementNamed(context, "/home");
+                Navigator.pushReplacementNamed(context, "/home",
+                    arguments: widget.userId);
               },
               icon: const Icon(Icons.check),
               highlightColor: const Color(0xffE3562A),

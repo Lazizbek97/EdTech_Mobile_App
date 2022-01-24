@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:udemy_coupons/models/model_users/model_user.dart';
 import 'package:udemy_coupons/size_config.dart';
+import 'package:udemy_coupons/widgets/hive_boxes.dart';
 
 import 'widgets/social_media_links.dart';
 
@@ -15,6 +18,16 @@ class _SignInPageState extends State<SignInPage> {
   bool isFilledFields = false;
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  final _emailKey = GlobalKey<FormState>();
+  final _passwordKey = GlobalKey<FormState>();
+
+  List<Users>? allUsers;
+  int? userId;
+  @override
+  void initState() {
+    super.initState();
+    allUsers = UserBox.getUser().values.toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,55 +61,90 @@ class _SignInPageState extends State<SignInPage> {
                       ),
                       const Text("Login with social networks"),
                       const SocialMediaLinks(),
-                      TextFormField(
-                        controller: _emailController,
-                        onChanged: (value) {
-                          if (_emailController.text.isNotEmpty &&
-                              _passwordController.text.isNotEmpty) {
-                            isFilledFields = true;
-                            setState(() {});
-                          } else if (_emailController.text.isEmpty ||
-                              _passwordController.text.isEmpty) {
-                            isFilledFields = false;
-                            setState(() {});
-                          }
-                        },
-                        decoration: InputDecoration(
-                          hintText: "Email",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(13),
+                      Form(
+                        key: _emailKey,
+                        child: TextFormField(
+                          controller: _emailController,
+                          onChanged: (value) {
+                            if (_emailController.text.isNotEmpty &&
+                                _passwordController.text.isNotEmpty) {
+                              isFilledFields = true;
+                              setState(() {});
+                            } else if (_emailController.text.isEmpty ||
+                                _passwordController.text.isEmpty) {
+                              isFilledFields = false;
+                              setState(() {});
+                            }
+                          },
+                          decoration: InputDecoration(
+                            hintText: "Email",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(13),
+                            ),
                           ),
+                          validator: (v) {
+                            bool isMatched = false;
+                            for (var element in allUsers!) {
+                              if (element.email == _emailController.text) {
+                                isMatched = true;
+                                userId = allUsers!.indexOf(element);
+                              }
+                            }
+                            if (!isMatched) {
+                              return "Incorrect email";
+                            } else {
+                              return null;
+                            }
+                          },
                         ),
                       ),
-                      TextFormField(
-                        controller: _passwordController,
-                        onChanged: (value) {
-                          if (_emailController.text.isNotEmpty &&
-                              _passwordController.text.isNotEmpty) {
-                            isFilledFields = true;
-                            setState(() {});
-                          } else if (_emailController.text.isEmpty ||
-                              _passwordController.text.isEmpty) {
-                            isFilledFields = false;
-                            setState(() {});
-                          }
-                        },
-                        obscureText: isVisual,
-                        decoration: InputDecoration(
-                          hintText: "Password",
-                          suffixIcon: InkWell(
-                            onTap: () {
-                              setState(() {
-                                isVisual = !isVisual;
-                              });
-                            },
-                            child: isVisual
-                                ? const Icon(Icons.remove_red_eye_outlined)
-                                : const Icon(Icons.visibility_off_outlined),
+                      Form(
+                        key: _passwordKey,
+                        child: TextFormField(
+                          controller: _passwordController,
+                          onChanged: (value) {
+                            if (_emailController.text.isNotEmpty &&
+                                _passwordController.text.isNotEmpty) {
+                              isFilledFields = true;
+                              setState(() {});
+                            } else if (_emailController.text.isEmpty ||
+                                _passwordController.text.isEmpty) {
+                              isFilledFields = false;
+                              setState(() {});
+                            }
+                          },
+                          obscureText: isVisual,
+                          decoration: InputDecoration(
+                            hintText: "Password",
+                            suffixIcon: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  isVisual = !isVisual;
+                                });
+                              },
+                              child: isVisual
+                                  ? const Icon(Icons.remove_red_eye_outlined)
+                                  : const Icon(Icons.visibility_off_outlined),
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(13),
+                            ),
                           ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(13),
-                          ),
+                          validator: (v) {
+                            bool isMatched = false;
+                            for (var element in allUsers!) {
+                              if (element.password ==
+                                  _passwordController.text) {
+                                isMatched = true;
+                                userId = allUsers!.indexOf(element);
+                              }
+                            }
+                            if (!isMatched) {
+                              return "Incorrect password";
+                            } else {
+                              return null;
+                            }
+                          },
                         ),
                       ),
                       TextButton(
@@ -111,10 +159,15 @@ class _SignInPageState extends State<SignInPage> {
                         width: getWidth(309),
                         child: ElevatedButton(
                           onPressed: () {
-                            isFilledFields
-                                ? Navigator.pushReplacementNamed(
-                                    context, "/home")
-                                : null;
+                            if (_emailKey.currentState!.validate() &&
+                                _passwordKey.currentState!.validate()) {
+                              print(allUsers!.length);
+                              isFilledFields
+                                  ? Navigator.pushReplacementNamed(
+                                      context, "/home",
+                                      arguments: userId)
+                                  : null;
+                            }
                           },
                           child: const Text("Log in"),
                           style: ElevatedButton.styleFrom(

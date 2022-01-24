@@ -38,7 +38,9 @@ class RouterGenerator {
         );
       case '/home':
         return MaterialPageRoute(
-          builder: (context) => MyHomePage(),
+          builder: (context) => MyHomePage(
+            userId: args as int,
+          ),
         );
       case '/about':
         return MaterialPageRoute(
@@ -55,7 +57,8 @@ class RouterGenerator {
       case '/edit':
         return MaterialPageRoute(
           builder: (context) => EditPage(
-            text: args as String,
+            text: (args as List)[0],
+            userId: (args as List)[1],
           ),
         );
       case '/myCourses':
@@ -78,8 +81,6 @@ class RouterGenerator {
             data: args as ModelUdemy,
           ),
         );
-
-      // courseDetails
 
       case '/saved':
         return MaterialPageRoute(

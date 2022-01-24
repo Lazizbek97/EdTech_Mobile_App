@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:hive/hive.dart';
 import 'package:udemy_coupons/data/data.dart';
 import 'package:udemy_coupons/models/model_users/model_user.dart';
 import 'package:udemy_coupons/size_config.dart';

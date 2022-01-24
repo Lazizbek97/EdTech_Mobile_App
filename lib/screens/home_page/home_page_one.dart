@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:udemy_coupons/data/data.dart';
 import 'package:udemy_coupons/models/model_udemy.dart';
 import 'package:udemy_coupons/models/model_users/model_user.dart';
 import 'package:udemy_coupons/screens/home_page/widgets/course.dart';
@@ -11,24 +9,35 @@ import '../../size_config.dart';
 import 'widgets/category.dart';
 
 class HomePageOne extends StatefulWidget {
-  static List<ModelUdemy>? datam;
-
-  HomePageOne({
-    Key? key,
-  }) : super(key: key);
+  int userId;
+  HomePageOne({Key? key, required this.userId}) : super(key: key);
 
   @override
   State<HomePageOne> createState() => _HomePageOneState();
 }
 
 class _HomePageOneState extends State<HomePageOne> {
-  User aUser = users.last;
-  late Users curUser;
+  Users? curUser;
 
+  List<ModelUdemy>? courses;
+
+  // ? Data basani oldindan tekshiramiz agar malumotlar bo'lsa internetdagi api ga murojaat qilib o'tirmaymiz
   @override
   void initState() {
+    curUser = UserBox.getUser().values.toList()[widget.userId];
+
+    if (CourseBoxes.getCourse().values.isEmpty) {
+      ServiceUdemy.fetchData().then((value) {
+        for (var item in value) {
+          CourseBoxes.getCourse().add(item);
+        }
+        courses = CourseBoxes.getCourse().values.toList();
+      });
+    } else {
+      print("data basadan kelmoqda");
+      courses = CourseBoxes.getCourse().values.toList();
+    }
     setState(() {});
-    curUser = UserBox.getUser().values.toList().last;
   }
 
   Widget build(BuildContext context) {
@@ -57,7 +66,7 @@ class _HomePageOneState extends State<HomePageOne> {
                           ),
                         ),
                         Text(
-                          curUser.name,
+                          curUser!.name,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 32,
@@ -95,7 +104,7 @@ class _HomePageOneState extends State<HomePageOne> {
                     InkWell(
                       onTap: () {
                         Navigator.pushNamed(context, "/search",
-                            arguments: HomePageOne.datam);
+                            arguments: courses);
                       },
                       child: TextFormField(
                         enabled: false,
@@ -142,7 +151,10 @@ class _HomePageOneState extends State<HomePageOne> {
             ],
           ),
         ),
-        const Expanded(child: Course())
+        Expanded(
+            child: Course(
+          courses: courses,
+        ))
       ],
     );
   }

@@ -10,8 +10,11 @@ import '../../size_config.dart';
 class SettingPage extends StatefulWidget {
   SettingPage({
     Key? key,
+    required this.userId,
   }) : super(key: key);
-  User aUser = users.last;
+  int userId;
+
+  // User aUser = users.last;
   @override
   State<SettingPage> createState() => _SettingPageState();
 }
@@ -23,7 +26,7 @@ class _SettingPageState extends State<SettingPage> {
   @override
   void initState() {
     setState(() {});
-    curUser = UserBox.getUser().values.toList().last;
+    curUser = UserBox.getUser().values.toList()[widget.userId];
   }
 
   @override
@@ -98,7 +101,8 @@ class _SettingPageState extends State<SettingPage> {
             ),
             InkWell(
               onTap: () {
-                Navigator.pushNamed(context, "/edit", arguments: "name");
+                Navigator.pushNamed(context, "/edit",
+                    arguments: ["name", widget.userId]);
               },
               child: Container(
                 height: getHeight(80),
@@ -128,7 +132,8 @@ class _SettingPageState extends State<SettingPage> {
             ),
             InkWell(
               onTap: () {
-                Navigator.pushNamed(context, "/edit", arguments: "email");
+                Navigator.pushNamed(context, "/edit",
+                    arguments: ["email", widget.userId]);
               },
               child: Container(
                 height: getHeight(80),
@@ -158,7 +163,8 @@ class _SettingPageState extends State<SettingPage> {
             ),
             InkWell(
               onTap: () {
-                Navigator.pushNamed(context, "/edit", arguments: "password");
+                Navigator.pushNamed(context, "/edit",
+                    arguments: ["password", widget.userId]);
               },
               child: Container(
                 height: getHeight(80),

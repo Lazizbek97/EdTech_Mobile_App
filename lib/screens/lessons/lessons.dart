@@ -389,6 +389,8 @@ class PageLessonOne extends StatelessWidget {
                   width: double.infinity,
                   child: Text(
                     data.whatYouWillLearn.toString(),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 15,
                   ),
                 )
               ],

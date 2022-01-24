@@ -9,10 +9,14 @@ import 'models/model_users/model_user.dart';
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
+
+  // *Opening users data boxes
   Hive.registerAdapter(UsersAdapter());
   Hive.openBox<Users>("users");
 
-  // Hive.openBox<ModelUdemy>("courses");
+  // *Opening boxes for all courses
+  Hive.registerAdapter(ModelUdemyAdapter());
+  Hive.openBox<ModelUdemy>("courses");
 
   runApp(const MyApp());
 }
